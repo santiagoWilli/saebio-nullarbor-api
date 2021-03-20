@@ -11,8 +11,12 @@ public class Answer {
         this.body = body;
     }
 
+    public static Answer error(int code, String message) {
+        return new Answer(code, errorJson(message));
+    }
+
     public static Answer badRequest(String message) {
-        return new Answer(400, errorJson(message));
+        return Answer.error(400, message);
     }
 
     public int getCode() {
