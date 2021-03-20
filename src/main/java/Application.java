@@ -20,7 +20,6 @@ public class Application {
         if (options.help) printHelp();
         if (options.saebioApi == null) abnormalExit();
 
-        get("/hello", (request, response) -> "hello");
         post("/trim", new TrimHandler(options.saebioApi));
     }
 
