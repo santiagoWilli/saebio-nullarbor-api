@@ -42,3 +42,5 @@ java/build/**
 
 temp/
 test/
+scripts/nohup.out
+scripts/log.txt

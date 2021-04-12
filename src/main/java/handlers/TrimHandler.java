@@ -19,7 +19,7 @@ public class TrimHandler extends AbstractHandler<Sequence> {
     @Override
     protected Answer processRequest(Sequence sequence) {
         final String token = UUID.randomUUID().toString();
-        final String folderPath = "/home/microb76/tests/santiago/temp/" + token;
+        final String folderPath = "/home/microb76/tests/santiago/api/temp/" + token;
 
         for (Part part : sequence.getParts()) {
             try (InputStream stream = part.getInputStream()) {
@@ -34,8 +34,8 @@ public class TrimHandler extends AbstractHandler<Sequence> {
         ProcessBuilder process = new ProcessBuilder(scriptsAbsolutePath() + "start-and-disconnect.sh",
                 "./trim-and-post.sh", folderPath, token, saebioApiUrl + "/sequences/trimmed");
         try {
-            process.start();
-        } catch (IOException e) {
+            process.inheritIO().start().waitFor();
+        } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
             return Answer.error(500, "Trim could not be started");
         }

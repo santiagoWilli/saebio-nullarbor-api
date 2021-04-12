@@ -1,6 +1,17 @@
 #!/bin/bash
+echo "trim >>>>>> $(date)" >> log.txt
 
-cd "$1" || exit 1
+cd "$1"
+files=($(ls ./*.fq.gz))
+
+fastqFiles=$(ls ./*.fastq.gz)
+for file in $fastqFiles
+do
+  filename="${${files[1]}%.*}"
+  filename="${filename%.*}"
+  mv $file $filename.fq.gz
+done
+
 trim
 
 files=($(ls ./*_trimmed.fq.gz))
@@ -10,5 +21,11 @@ then
   exit 0
 fi
 
-curl -F "status=2" -F "token=$2" -F "file1=@${files[0]}" -F "file2=@${files[1]}" $3
-rm -f $files
+file1=${files[0]}
+file2=${files[1]}
+file1=${file1:2}
+file2=${file2:2}
+
+curl -F "status=2" -F "token=$2" -F "file1=@$file1" -F "file2=@$file2" $3
+
+rm -f "${files[0]}" "${files[1]}"
