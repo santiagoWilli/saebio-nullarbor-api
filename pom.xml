@@ -22,7 +22,7 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
                     <configuration>
-                        <release>11</release>
+                        <release>8</release>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -36,7 +36,7 @@
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
                     <configuration>
-                        <finalName>saebio-genome-secuencing-api</finalName>
+                        <finalName>saebio-nullarbor-api</finalName>
                         <appendAssemblyId>false</appendAssemblyId>
                         <archive>
                             <manifest>
