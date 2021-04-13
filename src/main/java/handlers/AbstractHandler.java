@@ -1,5 +1,6 @@
 package handlers;
 
+import org.apache.commons.io.FileUtils;
 import payloads.Validable;
 import spark.Request;
 import spark.Response;
@@ -7,13 +8,20 @@ import spark.Route;
 import utils.Answer;
 
 import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.Part;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 public abstract class AbstractHandler<V extends Validable> implements RequestHandler<V>, Route {
     private final Class<V> payloadClass;
+    private final String uuid;
 
     protected AbstractHandler(Class<V> payloadClass) {
         this.payloadClass = payloadClass;
+        this.uuid = UUID.randomUUID().toString();
     }
 
     @Override
@@ -28,13 +36,34 @@ public abstract class AbstractHandler<V extends Validable> implements RequestHan
     protected abstract Answer processRequest(V payload);
 
     @Override
-    public Object handle(Request request, Response response) throws Exception {
-        request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-        V payload = payloadClass.getConstructor(Collection.class).newInstance(request.raw().getParts());
+    public Object handle(Request request, Response response) throws IOException {
+        try {
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+            Collection<File> files = partsToFiles(request.raw().getParts());
+            V payload = payloadClass.getConstructor(Collection.class).newInstance(files);
 
-        Answer answer = process(payload);
-        response.status(answer.getCode());
-        response.type("application/json");
-        return answer.getBody();
+            Answer answer = process(payload);
+            FileUtils.deleteDirectory(new File("temp/" + uuid));
+
+            response.status(answer.getCode());
+            response.type("application/json");
+            return answer.getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            FileUtils.deleteDirectory(new File("temp/" + uuid));
+            response.status(500);
+            response.type("application/json");
+            return e.getMessage();
+        }
+    }
+
+    private Collection<File> partsToFiles(Collection<Part> parts) throws IOException {
+        Collection<File> files = new ArrayList<>();
+        for (Part part : parts) {
+            File file = new File("temp/" + uuid + "/" + part.getSubmittedFileName());
+            FileUtils.copyInputStreamToFile(part.getInputStream(), file);
+            files.add(file);
+        }
+        return files;
     }
 }
