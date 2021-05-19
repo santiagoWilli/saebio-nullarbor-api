@@ -19,6 +19,10 @@ public class Answer {
         return Answer.error(400, message);
     }
 
+    public static Answer withToken(int code, String token) {
+        return new Answer(code, "{\"token\":\""+ token +"\"}");
+    }
+
     public int getCode() {
         return code;
     }

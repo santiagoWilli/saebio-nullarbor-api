@@ -1,4 +1,5 @@
 import com.beust.jcommander.JCommander;
+import handlers.CreateAnalysisHandler;
 import handlers.TrimHandler;
 import utils.Arguments;
 
@@ -21,6 +22,9 @@ public class Application {
         if (options.saebioApi == null) abnormalExit();
 
         post("/trim", new TrimHandler(options.saebioApi));
+        path("/analysis", () -> {
+            post("", new CreateAnalysisHandler());
+        });
     }
 
     private static void printHelp() {

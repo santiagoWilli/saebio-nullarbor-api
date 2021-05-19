@@ -38,7 +38,7 @@ public class TrimHandler extends AbstractHandler<Sequence> {
             return Answer.error(500, "Trim could not be started");
         }
 
-        return new Answer(202, "{\"token\":\""+ token +"\"}");
+        return Answer.withToken(202, token);
     }
 
     private static String scriptsAbsolutePath() {
