@@ -1,6 +1,5 @@
 import com.beust.jcommander.JCommander;
-import handlers.CreateAnalysisHandler;
-import handlers.TrimHandler;
+import handlers.*;
 import utils.Arguments;
 
 import static spark.Spark.*;
@@ -24,6 +23,8 @@ public class Application {
         post("/trim", new TrimHandler(options.saebioApi));
         path("/analysis", () -> {
             post("", new CreateAnalysisHandler());
+            patch("/:token", new AnalysisFileHandler());
+            //post("/:token", new TrimHandler(options.saebioApi));
         });
     }
 

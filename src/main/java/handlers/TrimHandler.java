@@ -5,6 +5,7 @@ import payloads.Sequence;
 import utils.Answer;
 
 import java.io.*;
+import java.util.Map;
 import java.util.UUID;
 
 public class TrimHandler extends AbstractHandler<Sequence> {
@@ -16,7 +17,7 @@ public class TrimHandler extends AbstractHandler<Sequence> {
     }
 
     @Override
-    protected Answer processRequest(Sequence sequence) {
+    protected Answer processRequest(Sequence sequence, Map<String, String> requestParams) {
         final String token = UUID.randomUUID().toString();
         final String folderPath = "/home/microb76/tests/santiago/api/temp/" + token;
 
@@ -35,7 +36,7 @@ public class TrimHandler extends AbstractHandler<Sequence> {
             process.inheritIO().start().waitFor();
         } catch (IOException | InterruptedException e) {
             System.out.println(e.getMessage());
-            return Answer.error(500, "Trim could not be started");
+            return Answer.withMessage(500, "Trim could not be started");
         }
 
         return Answer.withToken(202, token);

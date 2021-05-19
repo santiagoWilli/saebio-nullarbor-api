@@ -11,12 +11,12 @@ public class Answer {
         this.body = body;
     }
 
-    public static Answer error(int code, String message) {
+    public static Answer withMessage(int code, String message) {
         return new Answer(code, errorJson(message));
     }
 
     public static Answer badRequest(String message) {
-        return Answer.error(400, message);
+        return Answer.withMessage(400, message);
     }
 
     public static Answer withToken(int code, String token) {
