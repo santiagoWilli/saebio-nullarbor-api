@@ -1,6 +1,8 @@
 package handlers;
 
 import org.apache.commons.io.FileUtils;
+import payloads.EmptyPayload;
+import payloads.Multipart;
 import payloads.Validable;
 import spark.Request;
 import spark.Response;
@@ -39,9 +41,12 @@ public abstract class AbstractHandler<V extends Validable> implements RequestHan
     @Override
     public Object handle(Request request, Response response) throws IOException {
         try {
-            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
-            Collection<File> files = partsToFiles(request.raw().getParts());
-            V payload = payloadClass.getConstructor(Collection.class).newInstance(files);
+            V payload = null;
+            if (payloadClass.getSuperclass().equals(Multipart.class)) {
+                request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+                Collection<File> files = partsToFiles(request.raw().getParts());
+                payload = payloadClass.getConstructor(Collection.class).newInstance(files);
+            }
 
             Answer answer = process(payload, request.params());
             FileUtils.deleteDirectory(new File("temp/" + uuid));

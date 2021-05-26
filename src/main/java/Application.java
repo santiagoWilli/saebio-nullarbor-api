@@ -24,7 +24,7 @@ public class Application {
         path("/analysis", () -> {
             post("", new CreateAnalysisHandler());
             patch("/:token", new AnalysisFileHandler());
-            //post("/:token", new TrimHandler(options.saebioApi));
+            post("/:token", new AnalysisStartHandler(options.saebioApi));
         });
     }
 

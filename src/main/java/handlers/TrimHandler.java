@@ -3,6 +3,7 @@ package handlers;
 import org.apache.commons.io.FileUtils;
 import payloads.Sequence;
 import utils.Answer;
+import utils.Utils;
 
 import java.io.*;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class TrimHandler extends AbstractHandler<Sequence> {
             }
         }
 
-        ProcessBuilder process = new ProcessBuilder(scriptsAbsolutePath() + "start-and-disconnect.sh",
+        ProcessBuilder process = new ProcessBuilder(Utils.scriptsAbsolutePath() + "start-and-disconnect.sh",
                 "./trim-and-post.sh", folderPath, token, saebioApiUrl + "/sequences/trimmed");
         try {
             process.inheritIO().start().waitFor();
@@ -40,11 +41,6 @@ public class TrimHandler extends AbstractHandler<Sequence> {
         }
 
         return Answer.withToken(202, token);
-    }
-
-    private static String scriptsAbsolutePath() {
-        String scriptsAbsPath = new File(".").getAbsolutePath();
-        return scriptsAbsPath.substring(0, scriptsAbsPath.length() - 1) + "scripts/";
     }
 
     private static String fileName(String fileName) {
