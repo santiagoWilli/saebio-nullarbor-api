@@ -14,8 +14,11 @@ resultFolder=$(echo ./result-*)
 resultFolder=${resultFolder:2}
 reportFile=$resultFolder/report/index.html
 refFile=$resultFolder/ref.fa
+logFile=$resultFolder/nullarbor.log
 if [ -f "$reportFile" ]; then
     curl -F "status=2" -F "token=$2" -F "file1=@$reportFile" -F "file2=@$refFile" $3
+elif [ -f "$logFile" ]; then
+    curl -F "status=5" -F "token=$2" -F "file=@$logFile" $3
 else
     curl -F "status=5" -F "token=$2" $3
 fi
