@@ -17,7 +17,7 @@ public class AnalysisStartHandler extends AbstractHandler<EmptyPayload> {
 
     @Override
     protected Answer processRequest(EmptyPayload payload, Map<String, String> requestParams) {
-        final String folderPath = "/home/microb76/tests/santiago/api/temp/" + requestParams.get(":token") + "/";
+        final String folderPath = Utils.tempFolderPath() + requestParams.get(":token") + "/";
         ProcessBuilder process = new ProcessBuilder(Utils.scriptsAbsolutePath() + "start-and-disconnect.sh",
                 "./run-and-post.sh", folderPath, requestParams.get(":token"), saebioApiUrl + "/reports/result");
         try {

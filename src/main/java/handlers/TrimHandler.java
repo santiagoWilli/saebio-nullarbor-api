@@ -20,7 +20,7 @@ public class TrimHandler extends AbstractHandler<Sequence> {
     @Override
     protected Answer processRequest(Sequence sequence, Map<String, String> requestParams) {
         final String token = UUID.randomUUID().toString();
-        final String folderPath = "/home/microb76/tests/santiago/api/temp/" + token;
+        final String folderPath = Utils.tempFolderPath() + token;
 
         for (File file : sequence.getFiles()) {
             try {

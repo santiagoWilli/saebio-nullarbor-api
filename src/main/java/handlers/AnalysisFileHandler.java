@@ -3,6 +3,7 @@ package handlers;
 import org.apache.commons.io.FileUtils;
 import payloads.AnalysisFile;
 import utils.Answer;
+import utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +16,7 @@ public class AnalysisFileHandler extends AbstractHandler<AnalysisFile> {
 
     @Override
     protected Answer processRequest(AnalysisFile file, Map<String, String> requestParams) {
-        final String folderPath = "/home/microb76/tests/santiago/api/temp/" + requestParams.get(":token") + "/";
+        final String folderPath = Utils.tempFolderPath() + requestParams.get(":token") + "/";
         try {
             FileUtils.moveFile(file.get(), new File(folderPath + fileName(file.get().getName())));
         } catch (IOException e) {
