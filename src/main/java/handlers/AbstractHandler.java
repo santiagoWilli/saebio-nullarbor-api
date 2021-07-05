@@ -8,6 +8,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 import utils.Answer;
+import utils.Utils;
 
 import javax.servlet.MultipartConfigElement;
 import javax.servlet.http.Part;
@@ -49,14 +50,14 @@ public abstract class AbstractHandler<V extends Validable> implements RequestHan
             }
 
             Answer answer = process(payload, request.params());
-            FileUtils.deleteDirectory(new File("temp/" + uuid));
+            FileUtils.deleteDirectory(new File(Utils.tempFolderPath() + uuid));
 
             response.status(answer.getCode());
             response.type("application/json");
             return answer.getBody();
         } catch (Exception e) {
             e.printStackTrace();
-            FileUtils.deleteDirectory(new File("temp/" + uuid));
+            FileUtils.deleteDirectory(new File(Utils.tempFolderPath() + uuid));
             response.status(500);
             response.type("application/json");
             return e.getMessage();
@@ -66,7 +67,7 @@ public abstract class AbstractHandler<V extends Validable> implements RequestHan
     private Collection<File> partsToFiles(Collection<Part> parts) throws IOException {
         Collection<File> files = new ArrayList<>();
         for (Part part : parts) {
-            File file = new File("temp/" + uuid + "/" + part.getSubmittedFileName());
+            File file = new File(Utils.tempFolderPath() + uuid + "/" + part.getSubmittedFileName());
             FileUtils.copyInputStreamToFile(part.getInputStream(), file);
             files.add(file);
         }
