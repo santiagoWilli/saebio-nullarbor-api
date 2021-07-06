@@ -16,7 +16,11 @@ reportFile=$resultFolder/report/index.html
 refFile=$resultFolder/ref.fa
 logFile=$resultFolder/nullarbor.log
 if [ -f "$reportFile" ]; then
-    curl -F "status=2" -F "token=$2" -F "file1=@$reportFile" -F "file2=@$refFile" $3
+    cd "$resultFolder"
+    zip -r files.zip "report/"
+    mv files.zip ..
+    cd ..
+    curl -F "status=2" -F "token=$2" -F "file1=@files.zip" -F "file2=@$refFile" $3
 elif [ -f "$logFile" ]; then
     curl -F "status=5" -F "token=$2" -F "file=@$logFile" $3
 else
